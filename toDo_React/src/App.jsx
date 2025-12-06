@@ -3,11 +3,6 @@ import './App.css'
 import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
 
-// Inject styles
-// const styleSheet = document.createElement("style");
-// styleSheet.innerText = styles;
-// document.head.appendChild(styleSheet);
-
 const App = () => {
   const [tasks, setTasks] = useState([]);
   const [warning, setWarning] = useState('');
