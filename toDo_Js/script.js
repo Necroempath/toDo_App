@@ -1,5 +1,5 @@
-let tasks = [];
-let nextId = 1;
+let tasks = load();
+let nextId = tasks.length + 1;
 
 const taskInput = document.querySelector("#taskInput");
 const addBtn = document.querySelector("#addBtn");
@@ -15,15 +15,31 @@ function showAlert(message) {
         alertBox.classList.remove('show');
     }, 3000);
 }
+
 function formatDate(date) {
-  const options = {
+  const d = (date instanceof Date) ? date : new Date(date);
+  return d.toLocaleString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  };
-  return date.toLocaleDateString("en-US", options);
+  });
+}
+
+function save() {
+  tasksJson = JSON.stringify(tasks);
+  localStorage.setItem('tasks', tasksJson)
+}
+
+function load() {
+  const tasksJson = localStorage.getItem('tasks') || '[]';
+  const loaded = JSON.parse(tasksJson);
+
+  return loaded.map(task => ({
+    ...task,
+    creationDate: new Date(task.creationDate)
+  }));
 }
 
 function addTask() {
@@ -42,11 +58,13 @@ function addTask() {
 
   tasks.push(task);
   taskInput.value = "";
+  save();
   renderTasks();
 }
 
 function deleteTask(id) {
   tasks = tasks.filter((task) => task.id !== id);
+  save();
   renderTasks();
 }
 
